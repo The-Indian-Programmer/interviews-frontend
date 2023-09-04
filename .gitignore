@@ -1,0 +1,28 @@
+# Dependency directories
+node_modules/
+
+# Environment files
+.env
+
+# Build artifacts
+build/
+dist/
+out/
+.next/
+*.out/
+.cache/
+public/
+
+# Editor and IDE files
+.vscode/
+.idea/
+
+# Mac OSX specific files
+.DS_Store
+
+# Windows thumbnail cache files
+Thumbs.db
+
+# User-specific files
+.npmrc
+.npmignore
