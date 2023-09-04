@@ -4,9 +4,10 @@ import CreatePostMessage from "./CreatePostMessage";
 import { isEmpty } from "../../../../../../configs/Funtions";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PostCard from "./PostCard";
-import { getPostsList, handlePostDelete, updatePostLikeDislike, updatePostList } from "../../../store";
+import { getPostById, getPostsList, handlePostDelete, handleUpdatePost, updatePostLikeDislike, updatePostList } from "../../../store";
 import { toast } from "react-toastify";
 import ToastContent from "../../../../../../common-components/Toast";
+import CreatePostModal from "../CreatePost/popup/CreatePostModal";
 
 const PostsLists = () => {
   /* Redux Vars */
@@ -18,6 +19,8 @@ const PostsLists = () => {
 
   /* State Vars */
   const [selectedPost, setSelectedPost] = React.useState(null);
+  const [showEditPostModal, setEditPostModal] = React.useState(false);
+  const [editPostData, setEditPostData] = React.useState(null);
   const [allPostsList, setAllPostsList] = React.useState(allPosts.data); 
   const [hasMore, setHasMore] = React.useState(allPosts.hasMore);
 
@@ -86,6 +89,56 @@ const PostsLists = () => {
     }
   }, [allPosts]);
 
+
+  /* Functions to handle post edit */
+  const handleEditPost = (postId) => {
+    const postData = allPostsList.filter((item) => item._id === postId);
+    if (!isEmpty(postData)) {
+      setEditPostData(postData[0]);
+      setEditPostModal(true);
+      setSelectedPost(null);
+    }
+  }
+
+  /* Functions to handle post edit submit */
+  const handleEditPostSubmit = async (data) => {
+
+    let formData = new FormData();
+    formData.append("postContent", data.postContent);
+    formData.append("postId", data.postId);
+
+    const oldfiles = data.files.filter((item) => item.url);
+    const newFiles = data.files.filter((item) => !item.url);
+
+    if (newFiles.length > 0) {
+      newFiles.forEach((file) => {
+        formData.append("files", file);
+      });
+    }
+    formData.append("oldFiles", JSON.stringify(oldfiles));
+    setEditPostData(null);
+    setEditPostModal(false);
+    
+    const apiRes = await dispatch(handleUpdatePost(formData));
+    if (apiRes.payload.status) {
+      const postId = apiRes.payload.data;
+      const postIndex = allPostsList.findIndex((item) => item._id == postId);
+      
+      const postApiRes = await dispatch(getPostById({postId}));
+      if (postApiRes.payload.status) {
+        let newPost = postApiRes.payload.data;
+
+        let oldPostLists = JSON.parse(JSON.stringify([...allPostsList]));
+
+
+        oldPostLists[postIndex] = newPost;
+
+        dispatch(updatePostList({data: [...oldPostLists], hasMore}));
+      }
+    }
+    
+  }
+
   return (
     <React.Fragment>
       {creatingPosts && <CreatePostMessage />}
@@ -113,10 +166,13 @@ const PostsLists = () => {
               selectedPost={selectedPost}
               handleDelete={handleDelete}
               handlePostLikeDislike={handlePostLikeDislike}
+              handleEditPost={handleEditPost}
             />
           );
         })}
       </InfiniteScroll>
+
+      {showEditPostModal && <CreatePostModal data={editPostData} show={showEditPostModal} handleCancel={() => setEditPostModal(false)} handleSubmit={handleEditPostSubmit}/>}
     </React.Fragment>
   );
 };

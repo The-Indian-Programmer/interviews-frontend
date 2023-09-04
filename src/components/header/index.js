@@ -84,7 +84,7 @@ const Header = () => {
       if (result.isConfirmed) {
         const apiRes = await useJwtVars.logout();
         dispatch(handleLogout());
-        history.push("/");
+        history.push("/login");
         setIsOpen(false);
       } else if (result.isDenied) {
         setIsOpen(false);
@@ -92,7 +92,7 @@ const Header = () => {
     })
   }
   const handleProfile = () => {
-    history.push(`/user/${userData.username}`);
+    history.push(`/user/${userData._id}`);
   }
 
   /* Show icon based on user login status */

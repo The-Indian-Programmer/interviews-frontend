@@ -15,11 +15,12 @@ const PostCard = ({
   handleSelectedPost,
   handleDelete,
   handlePostLikeDislike,
+  handleEditPost,
 }) => {
   /* Redux Vars */
   const userData = useSelector((state) => state.auth.userData);
 
-
+  
   /* Routes vars */
   const history = useHistory();
 
@@ -114,9 +115,8 @@ const PostCard = ({
 
 
   const handleUserClick = () => {
-    history.push(`/user/${postState.username}`);
+    history.push(`/user/${postState.authorId}`);
   }
-
 
   return (
     <div className=" bg-gray-950 rounded-xl shadow-md overflow-hidden mx-1 md:mx-1 sm:mx-0 lg:mx-1 xl:mx-2 mt-4">
@@ -142,7 +142,7 @@ const PostCard = ({
 
             {selectedPost == postState._id && (
               <div className="flex flex-col absolute right-1 bg-gray-800 p-1 rounded-sm w-max z-10">
-                <button className="w-max bg-gray-800 px-2 py-1">
+                <button onClick={() => handleEditPost(postState._id)} className="w-max bg-gray-800 px-2 py-1">
                   <i className="fa-solid fa-pencil text-white text-sm w-auto mr-2"></i>
                   Edit
                 </button>

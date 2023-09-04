@@ -35,7 +35,7 @@ export const publicRoute = [
     className: ""
   },
   {
-    path: "/user/:username",
+    path: "/user/:userId",
     display: true,
     exact: true,
     name: "UserDetail",

@@ -7,6 +7,7 @@ import { defaultAvatar } from "../../../configs/Contants";
 import EditProfile from "./popup/EditProfile";
 import { toast, Slide } from "react-toastify";
 import ToastContent from "../../../common-components/Toast";
+import PostGallery from "./components/PostGallery";
 const UserDetail = () => {
   /* Redux Vars */
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const UserDetail = () => {
   const [showEditProfileModal, setShowEditProfileModal] = React.useState(false);
 
   /* Routes Vars */
-  const { username } = useParams();
+  const { userId } = useParams();
 
   /* Local Vars */
   const myProfile = user._id == userData._id;
@@ -25,22 +26,16 @@ const UserDetail = () => {
   /* Function to get selected user details */
   const getSelectedUserDetails = () => {
     let bodyData = {
-      username,
+      userId,
     };
 
-    if (!isEmpty(userData)) {
-      bodyData = {
-        ...bodyData,
-        userId: userData._id,
-      };
-    }
     dispatch(getUserDetails(bodyData));
   };
 
   /* Function to get data on page mout */
   React.useEffect(() => {
     getSelectedUserDetails();
-  }, [username]);
+  }, [userId]);
 
   const userDetails = {
     isMyAccount: myProfile,
@@ -66,6 +61,7 @@ const UserDetail = () => {
     isFollowing: user.isFollowing ? user.isFollowing : false,
     totalFollowers: user.totalFollowers ? user.totalFollowers : 0,
     totalFollowing: user.totalFollowing ? user.totalFollowing : 0,
+    posts: user.posts ? user.posts : [],
   };
 
   /* Function to handle proflie submit */
@@ -125,7 +121,7 @@ const UserDetail = () => {
   return (
     <React.Fragment>
 
-    <div className="homepage mt-20 w-full h-screen w-100 bg-black">
+    <div className="homepage mt-20 w-auto h-auto bg-black mb-10">
       <div className="px-0 h-full">
         <div className="container mx-auto p-4">
           <div className="bg-white shadow-md rounded-lg overflow-hidden border border-white">
@@ -204,7 +200,14 @@ const UserDetail = () => {
           </div>
         </div>
       </div>
+
+
+      {/* Post Gallery */}
+    <PostGallery posts={userDetails.posts}/>
     </div>
+
+    
+
     {showEditProfileModal && <EditProfile show={showEditProfileModal} userDetails={userDetails} handleClose={() => setShowEditProfileModal(false)} handleSubmit={handleEditProfile}/>}
     </React.Fragment>
   );

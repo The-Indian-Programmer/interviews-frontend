@@ -17,7 +17,17 @@ const CreatePost = () => {
   const handlePostSubmit = async (values) => {
     let formData = new FormData();
     formData.append("postContent", values.postContent);
-    formData.append("files", JSON.stringify(values.files));
+
+    const oldfiles = values.files.filter((item) => item.url);
+    const newFiles = values.files.filter((item) => !item.url);
+
+    if (newFiles.length > 0) {
+      newFiles.forEach((file) => {
+        formData.append("files", file);
+      });
+    }
+    formData.append("oldFiles", JSON.stringify(oldfiles));
+    
     dispatch(handleCreatePost(formData));
     setCreatePostModal(false);
     
