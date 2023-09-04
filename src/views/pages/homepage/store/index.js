@@ -36,6 +36,12 @@ export const updatePostList = createAsyncThunk("post/update-post-list", async (d
   return data;
 });
 
+export const handleUpdatePost = createAsyncThunk("post/update-post", async (data) => {
+  const response = await axios.post("/post/update-post", data);
+  return response.data;
+});
+
+
 
 export const postSlice = createSlice({
   name: "posts",
@@ -78,6 +84,15 @@ export const postSlice = createSlice({
     });
     builder.addCase(updatePostList.fulfilled, (state, action) => {
       state.allPosts = {data: action.payload.data, hasMore: action.payload.hasMore}
+    });
+    builder.addCase(handleUpdatePost.pending, (state, action) => {
+      state.creatingPosts = true
+    })
+    builder.addCase(handleUpdatePost.fulfilled, (state, action) => {
+      state.creatingPosts = false
+    });
+    builder.addCase(handleUpdatePost.rejected, (state, action) => {
+      state.creatingPosts = false
     });
   }
  

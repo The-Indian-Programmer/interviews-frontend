@@ -26,6 +26,14 @@ export const publicRoute = [
     component: Register,
     className: ""
   },
+  {
+    path: "/user/:userId",
+    display: true,
+    exact: true,
+    name: "UserDetail",
+    component: UserDetail,
+    className: ""
+  },
 ]
 
 /* IF USER IS LOGGED-IN THEN HE/SHE/TIKTOKER CAN'T ACCESS THESE ROUTES */

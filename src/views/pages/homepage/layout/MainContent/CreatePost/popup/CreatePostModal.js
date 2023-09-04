@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   VALIDATION_MESSAGES,
   defaultAvatar,
@@ -10,7 +10,7 @@ import ToastContent from "../../../../../../../common-components/Toast";
 import { uploadFiles } from "../../../../../../../common-api-store";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-const CreatePostModal = ({ show, handleCancel, handleSubmit }) => {
+const CreatePostModal = ({ show, handleCancel, handleSubmit, data }) => {
   /* Formik */
   const formik = useFormik({
     initialValues: {
@@ -22,7 +22,12 @@ const CreatePostModal = ({ show, handleCancel, handleSubmit }) => {
       files: Yup.array(),
     }),
     onSubmit: (values) => {
-      handleSubmit(values);
+      let newValues = {...values}
+      if (!isEmpty(data) && !isEmpty(data._id)) {
+        newValues.postId = data._id
+
+      }
+      handleSubmit(newValues);
     },
   });
 
@@ -53,7 +58,8 @@ const CreatePostModal = ({ show, handleCancel, handleSubmit }) => {
       }
 
       if (newResult.length > 0) {
-        handleFileUpload(newResult);
+        // handleFileUpload(newResult);
+        formik.setFieldValue("files", [...formik.values.files, ...newResult]);
       }
     },
   });
@@ -102,7 +108,7 @@ const CreatePostModal = ({ show, handleCancel, handleSubmit }) => {
         <i onClick={() => handleFileRemove(file)} className="fas fa-times absolute -right-2 -top-2 bg-white rounded-full p-1 text-red-500 cursor-pointer"></i>
         <img
           className="w-full h-full object-cover rounded-lg"
-          src={file.url}
+          src={file.url ? file.url : URL.createObjectURL(file)}
           alt=""
         />
       </div>
@@ -116,13 +122,23 @@ const CreatePostModal = ({ show, handleCancel, handleSubmit }) => {
         <i onClick={() => handleFileRemove(file)} className="fas fa-times absolute -right-2 -top-2 bg-white rounded-full p-1 text-red-500 cursor-pointer"></i>
         <video
           className="w-full h-full object-cover rounded-lg"
-          src={file.url}
+          src={file.url ? file.url : URL.createObjectURL(file)}
           alt=""
           controls
         />
       </div>
     );
   };
+
+
+  useEffect(() => {
+    if (isEmpty(data)) return
+    console.log(data)
+    formik.setFieldValue("postContent", data.postContent);
+    formik.setFieldValue("files", data.files);
+  }, [data]);
+
+
 
   return (
     <div className="fixed inset-0 flex items-start justify-center z-50 overflow-y-auto w-full">
@@ -176,9 +192,9 @@ const CreatePostModal = ({ show, handleCancel, handleSubmit }) => {
         {!isEmpty(formik.values.files) && formik.values.files.length > 0 && (
           <div className="grid grid-cols-12 gap-3 mt-2">
             {formik.values.files.map((file, index) =>
-              file.type == "image" ? (
+              file.type.includes("image") ? (
                 <RenderImage file={file} key={index} />
-              ) : file.type == "video" ? (
+              ) : file.type.includes("video") ? (
                 <RenderVideo file={file} key={index} />
               ) : (
                 ""
