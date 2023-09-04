@@ -11,14 +11,6 @@ const AllfundersList = React.lazy(props => Allfunders)
 /* IF ANYONE CAN ACCESS THESE ROUTES */
 export const publicRoute = [
   {
-    path: "/",
-    display: true,
-    exact: true,
-    name: "Home",
-    component: HomePage,
-    className: ""
-  },
-  {
     path: "/login",
     display: true,
     exact: true,
@@ -34,6 +26,15 @@ export const publicRoute = [
     component: Register,
     className: ""
   },
+]
+
+/* IF USER IS LOGGED-IN THEN HE/SHE/TIKTOKER CAN'T ACCESS THESE ROUTES */
+export const nonAuthRoutes = [
+ 
+]
+
+/* IF USER IS LOGGED-IN THEN HE/SHE/TIKTOKER CAN ACCESS THESE ROUTES */
+export const authRoutes = [
   {
     path: "/user/:username",
     display: true,
@@ -42,34 +43,12 @@ export const publicRoute = [
     component: UserDetail,
     className: ""
   },
-]
-
-/* IF USER IS LOGGED-IN THEN HE/SHE/TIKTOKER CAN'T ACCESS THESE ROUTES */
-export const nonAuthRoutes = [
   {
-    path: "/login",
+    path: "/",
     display: true,
     exact: true,
-    name: "Login",
-    component: Login,
+    name: "Home",
+    component: HomePage,
     className: ""
   },
-  {
-    path: "/register",
-    display: true,
-    exact: true,
-    name: "Register",
-    component: Register,
-    className: ""
-  },
-]
-
-/* IF USER IS LOGGED-IN THEN HE/SHE/TIKTOKER CAN ACCESS THESE ROUTES */
-export const authRoutes = [
-  {
-    path: "/allfunders",
-    display: true,
-    exact: true,
-    name: "Allfunders",
-  }
 ]
