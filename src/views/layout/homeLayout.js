@@ -5,9 +5,14 @@ import Header from "../../components/header";
 import Footer from "../../components/footer";
 import { isUserLoggedIn } from "../../auth/utils";
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getUserData } from "../../redux/authentication";
 export default function PublicLayout(props) {
   const history = useHistory();
   const pathName = history.location.pathname;
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const publicPaths = publicRoute.map((route) => route.path);
@@ -24,6 +29,14 @@ export default function PublicLayout(props) {
         }
     }
   }, [history.location.pathname]);
+
+
+  /* Called on page refresh if user is logged-id */
+  useEffect(() => {
+    if (isUserLoggedIn()) {
+      dispatch(getUserData());
+    }
+  }, [userData]);  
 
   return (
     <React.Fragment>
@@ -61,7 +74,7 @@ export default function PublicLayout(props) {
             </Suspense>
           }
         </main>
-        <Footer />
+        {/* <Footer /> */}
 
         {/* <Footer /> */}
       </div>

@@ -22,11 +22,22 @@ export const updateFollowStatus = createAsyncThunk("user/update-follow-status", 
     return response.data;
 });
 
+export const getNotificationList = createAsyncThunk("user/get-notifications", async (formData) => {
+    const response = await axios.post("/user/get-notifications", formData);
+    return response.data;
+});
+
+export const markAsRead = createAsyncThunk("user/mark-as-read", async (formData) => {
+  const response = await axios.post("/user/mark-as-read", formData);
+  return response.data;
+});
+
 
 export const postSlice = createSlice({
   name: "userdetails",
   initialState: {
     selectedUser: {},
+    notifications: [],
   },
   reducers: {},
   extraReducers: builder => {
@@ -34,6 +45,9 @@ export const postSlice = createSlice({
     builder.addCase(getUserDetails.fulfilled, (state, action) => {
       state.selectedUser = action.payload.data;
     });
+    builder.addCase(getNotificationList.fulfilled, (state, action) => {
+      state.notifications = action.payload.data;
+    })
   }
  
 });

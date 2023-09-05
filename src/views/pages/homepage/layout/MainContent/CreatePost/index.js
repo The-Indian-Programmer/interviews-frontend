@@ -1,9 +1,12 @@
 import React from "react";
 import { defaultAvatar } from "../../../../../../configs/Contants";
 import CreatePostModal from "./popup/CreatePostModal";
-import { handleCreatePost } from "../../../store";
-import { useDispatch } from "react-redux";
+import { getPostById, handleCreatePost, updatePostList } from "../../../layout/MainContent/store/index";
+import { useDispatch, useSelector } from "react-redux";
 const CreatePost = () => {
+
+  /* Redux Vars */
+  const allPosts = useSelector((state) => state.posts.allPosts);
 
   /* State Vars */
   const [createPostModal, setCreatePostModal] = React.useState(false);
@@ -28,8 +31,27 @@ const CreatePost = () => {
     }
     formData.append("oldFiles", JSON.stringify(oldfiles));
     
-    dispatch(handleCreatePost(formData));
     setCreatePostModal(false);
+    const apiRes = await dispatch(handleCreatePost(formData));
+
+    if (apiRes.payload.status) {
+      const newPostId = apiRes.payload.data
+      const bodyData = {
+        postId: newPostId,
+      }
+
+      const postApiRes = await dispatch(getPostById(bodyData));
+      if (postApiRes.payload.status) {
+        let newPost = postApiRes.payload.data;
+
+        let oldPostLists = JSON.parse(JSON.stringify([...allPosts.data]));
+
+
+        oldPostLists = [newPost, ...oldPostLists]
+
+        dispatch(updatePostList({data: [...oldPostLists], hasMore: allPosts.hasMore}));
+      }
+    }
     
   }
   return (

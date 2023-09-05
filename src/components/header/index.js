@@ -38,6 +38,7 @@ const Header = () => {
 
   // Redux state
   const userData = useSelector((state) => state.auth.userData);
+  const otherData = useSelector((state) => state.auth.otherData);
   const dispatch = useDispatch();
 
   /* Routes vars */
@@ -95,13 +96,24 @@ const Header = () => {
     history.push(`/user/${userData._id}`);
   }
 
+  /* Function to handle notification list */
+  const handleNotificationList = (status) => {
+    history.push("/notifications");
+  }
+
   /* Show icon based on user login status */
   const RenderUserIcon = () => {
     if (isUserLoggedIn()) {
       return (
-        <>
-          <div className="relative inline-block text-left" ref={dropdownRef}>
+        <div className="flex items-center ">
+          <div className="relative mr-5">
+            <i onClick={() => handleNotificationList(true)} className="fa-solid fa-bell me-2 text-3xl " role="button"></i>
+            <span className="absolute top-1 right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">{otherData.notifications ? otherData.notifications : 0}</span>
+          </div>
+          <div className="relative inline-block text-left" >
+            {/* // Notification icon */}
             <img
+              ref={dropdownRef}
               src={defaultAvatar}
               alt="Avatar"
               onClick={toggleDropdown}
@@ -111,13 +123,13 @@ const Header = () => {
             {isOpen && (
               <div className="absolute right-0 mt-2 w-32 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg z-10">
                 <ul>
-                  <li  className="cursor-pointer py-2 px-4 hover:bg-gray-100 text-center font-bold" onClick={handleProfile}>Profile</li>
+                  <li className="cursor-pointer py-2 px-4 hover:bg-gray-100 text-center font-bold" onClick={handleProfile}>Profile</li>
                   <li onClick={handleUserLogout} className="cursor-pointer py-2 px-4 hover:bg-gray-100 text-center font-bold">Logout</li>
                 </ul>
               </div>
             )}
           </div>
-        </>
+        </div>
       );
     } else {
       return (<button
@@ -133,11 +145,10 @@ const Header = () => {
   return (
     <>
       <nav
-        className={`${
-          scrolling
+        className={`${scrolling
             ? "bg-gray-500 text-white"
             : "text-white bg-gradient-to-r from-gray-500 to-gray-600"
-        } py-4 px-6 flex items-center justify-between shadow-lg fixed top-0 left-0 right-0 z-50`}
+          } py-4 px-6 flex items-center justify-between shadow-lg fixed top-0 left-0 right-0 z-50`}
       >
         <Link to="/" className="flex items-center" role="button">
           <svg className="h-6 w-6 text-white bg-gray-500 rounded-full p-1 ">

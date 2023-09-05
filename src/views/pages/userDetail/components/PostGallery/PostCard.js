@@ -10,6 +10,7 @@ const Post = ({ splash, caption, postId }) => {
     const handlePostClick = () => {
         history.push(`/post/${postId}`);
     }
+    
   return (
     <div role="button" onClick={handlePostClick} className="mx-4 my-4 col-span-12 sm:col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-4">
        <div className="bg-white shadow-md rounded-lg overflow-hidden">

@@ -4,13 +4,14 @@ import CreatePostMessage from "./CreatePostMessage";
 import { isEmpty } from "../../../../../../configs/Funtions";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PostCard from "./PostCard";
-import { getPostById, getPostsList, handlePostDelete, handleUpdatePost, updatePostLikeDislike, updatePostList } from "../../../store";
+import { getPostById, getPostsList, handlePostDelete, handleUpdatePost, updatePostLikeDislike, updatePostList } from "../../../layout/MainContent/store/index";
 import { toast } from "react-toastify";
 import ToastContent from "../../../../../../common-components/Toast";
 import CreatePostModal from "../CreatePost/popup/CreatePostModal";
 
 const PostsLists = () => {
   /* Redux Vars */
+  const userData = useSelector((state) => state.auth.userData);
   const creatingPosts = useSelector((state) => state.posts.creatingPosts);
   let allPosts = useSelector((state) => state.posts.allPosts);
   const currentPage = useSelector((state) => state.posts.currentPage);
@@ -21,9 +22,7 @@ const PostsLists = () => {
   const [selectedPost, setSelectedPost] = React.useState(null);
   const [showEditPostModal, setEditPostModal] = React.useState(false);
   const [editPostData, setEditPostData] = React.useState(null);
-  const [allPostsList, setAllPostsList] = React.useState(allPosts.data); 
-  const [hasMore, setHasMore] = React.useState(allPosts.hasMore);
-
+  const [isLoading, setIsLoading] = React.useState(false);
 
 
   /* Functions to handle selelcted post */
@@ -35,9 +34,13 @@ const PostsLists = () => {
   };
 
   /* Functions to getAll posts */
-  const handleGetAllPosts = (data) => {
+  const handleGetAllPosts = async (data) => {
     let bodyData = data;
-    dispatch(getPostsList(bodyData));
+    if (allPosts.data.length == 0) {
+      setIsLoading(true);
+    }
+    const apiRes = await dispatch(getPostsList(bodyData));
+    setIsLoading(false);
   };
 
   /* Functions to get data on mount*/
@@ -57,8 +60,6 @@ const PostsLists = () => {
     }
     const apiRes = await dispatch(handlePostDelete(bodyData));
     if (apiRes.payload.status) {
-        setAllPostsList(allPostsList.filter((item) => item._id !== selectedPost));
-        dispatch(updatePostList({data: allPostsList.filter((item) => item._id !== selectedPost), hasMore}));
         fetchMorePosts()
         setSelectedPost(null);
     } else {
@@ -79,20 +80,26 @@ const PostsLists = () => {
       like: like ? false : true,
     }
     dispatch(updatePostLikeDislike(bodyData));
+    const postIndex = allPosts.data.findIndex((item) => item._id == postId);
+    let oldPostLists = JSON.parse(JSON.stringify([...allPosts.data]));
+
+    if (like) {
+      oldPostLists[postIndex].likes = oldPostLists[postIndex].likes.filter((item) => item._id !== userData._id);
+    } else {
+      oldPostLists[postIndex].likes.push({_id: userData._id});
+    }
+    
+    dispatch(updatePostList({data: [...oldPostLists], hasMore: allPosts.hasMore}));
     
   }
 
-  useEffect(() => {
-    if (!isEmpty(allPosts)) {
-      setAllPostsList(allPosts.data);
-      setHasMore(allPosts.hasMore);
-    }
-  }, [allPosts]);
+
 
 
   /* Functions to handle post edit */
   const handleEditPost = (postId) => {
-    const postData = allPostsList.filter((item) => item._id === postId);
+    // const postData = allPostsList.filter((item) => item._id === postId);
+    const postData = allPosts.data.filter((item) => item._id === postId);
     if (!isEmpty(postData)) {
       setEditPostData(postData[0]);
       setEditPostModal(true);
@@ -122,18 +129,18 @@ const PostsLists = () => {
     const apiRes = await dispatch(handleUpdatePost(formData));
     if (apiRes.payload.status) {
       const postId = apiRes.payload.data;
-      const postIndex = allPostsList.findIndex((item) => item._id == postId);
+      const postIndex = allPosts.data.findIndex((item) => item._id == postId);
       
       const postApiRes = await dispatch(getPostById({postId}));
       if (postApiRes.payload.status) {
         let newPost = postApiRes.payload.data;
 
-        let oldPostLists = JSON.parse(JSON.stringify([...allPostsList]));
+        let oldPostLists = JSON.parse(JSON.stringify([...allPosts.data]));
 
 
         oldPostLists[postIndex] = newPost;
 
-        dispatch(updatePostList({data: [...oldPostLists], hasMore}));
+        dispatch(updatePostList({data: [...oldPostLists], hasMore: allPosts.hasMore}));
       }
     }
     
@@ -142,22 +149,19 @@ const PostsLists = () => {
   return (
     <React.Fragment>
       {creatingPosts && <CreatePostMessage />}
-
+      {isLoading && <div className="h-screen text-white flex items-center justify-between">
+      <div className="animate-spin text-center mx-auto rounded-full h-16 w-16 border-t-2 border-b-8 border-white"></div>
+        </div>}
       {/* Infinite Scroll */}
       <InfiniteScroll
-        dataLength={allPostsList} //This is important field to render the next data
+        dataLength={allPosts.data} //This is important field to render the next data
         next={() => fetchMorePosts()}
-        hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
-        endMessage={
-          <p style={{ textAlign: "center" }}>
-            <b>Yay! You have seen it all</b>
-          </p>
-        }
+        hasMore={allPosts.hasMore}
+        loader={<h4 className="text-center text-white">Loading...</h4>}
         
       >
-       {!isEmpty(allPostsList) &&
-        allPostsList.map((item, index) => {
+       {!isEmpty(allPosts.data) &&
+        allPosts.data.map((item, index) => {
           return (
             <PostCard
               key={index}

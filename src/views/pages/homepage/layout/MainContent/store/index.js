@@ -60,7 +60,7 @@ export const postSlice = createSlice({
     currentPage: 1,
     perPageItem: 2,
     searchTerm: "",
-    selectedPost: null,
+    selectedPost: null
 
   },
   reducers: {},

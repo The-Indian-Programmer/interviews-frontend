@@ -16,8 +16,8 @@ const initialUser = () => {
 };
 
 
-const getDetails = createAsyncThunk("authentication/getDetails", async () => {
-  const response = await axios.get("/api/auth/details");
+export const getUserData = createAsyncThunk("authentication/get-detail", async () => {
+  const response = await axios.get("/auth/get-detail");
   return response.data;
 });
 
@@ -25,6 +25,9 @@ export const authSlice = createSlice({
   name: "authentication",
   initialState: {
     userData: initialUser(),
+    otherData: {
+      notifications: 0,
+    },
   },
   reducers: {
     handleLogin: (state, action) => {
@@ -35,6 +38,9 @@ export const authSlice = createSlice({
       localStorage.setItem(config.storageTokenKeyName, JSON.stringify(action.payload.accessToken))
       localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
     },
+    handleRefresh: (state, action) => {
+      state.userData = action.payload
+    },
     handleLogout: (state, action) => {
       state.userData = {}
       localStorage.removeItem('userData')
@@ -44,6 +50,11 @@ export const authSlice = createSlice({
       state[config.storageRefreshTokenKeyName] = null
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(getUserData.fulfilled, (state, action) => {
+      state.otherData = action.payload.data;
+    });
+  }
  
 });
 

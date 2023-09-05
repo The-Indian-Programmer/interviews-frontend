@@ -19,8 +19,8 @@ const PostGallery = ({posts}) => {
   return (
     <div className="container mx-auto">
       <div className="grid grid-cols-12 gap-4">
-        {newPosts.map((post) => (
-          <Post key={post.postId} postId={post.postId} splash={post.splash} caption={post.caption} />
+        {newPosts.map((post, index) => (
+          <Post key={index} postId={post.postId} splash={post.splash} caption={post.caption} />
         ))}
       </div>
     </div>

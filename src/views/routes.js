@@ -5,6 +5,7 @@ import Login from "../views/pages/auth/Login"
 import Register from "./pages/auth/Register"
 import UserDetail from "./pages/userDetail/index"
 import PostDetails from "./pages/postDetail"
+import Notifications from "./pages/userDetail/notification/index"
 const Home = React.lazy(props => HomePage)
 const AllfundersList = React.lazy(props => Allfunders)
 
@@ -58,6 +59,14 @@ export const authRoutes = [
     exact: true,
     name: "PostDetails",
     component: PostDetails,
+    className: ""
+  },
+  {
+    path: "/notifications",
+    display: true,
+    exact: true,
+    name: "Notifications",
+    component: Notifications,
     className: ""
   },
   

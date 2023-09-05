@@ -11,7 +11,7 @@ const HomePage = () => {
     <React.Fragment>
       <div className="homepage mt-20 w-full w-100 h-full">
         <div className="px-0 h-full">
-          <div className="grid grid-cols-12 h-full">
+          <div className="grid grid-cols-12 h-full bg-black">
             <SidebarLeft />
             <MainContent />
             <SidebarRight />
