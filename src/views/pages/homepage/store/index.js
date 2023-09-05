@@ -41,6 +41,15 @@ export const handleUpdatePost = createAsyncThunk("post/update-post", async (data
   return response.data;
 });
 
+export const getPostDetailsByPostId = createAsyncThunk("post/get-post-details-by-post-id", async (data) => {
+  const response = await axios.post("/post/get-post-details-by-post-id", data);
+  return response.data;
+});
+
+export const addPostComment = createAsyncThunk("post/add-post-comment", async (data) => {
+  const response = await axios.post("/post/add-post-comment", data);
+  return response.data;
+});
 
 
 export const postSlice = createSlice({
@@ -93,6 +102,9 @@ export const postSlice = createSlice({
     });
     builder.addCase(handleUpdatePost.rejected, (state, action) => {
       state.creatingPosts = false
+    });
+    builder.addCase(getPostDetailsByPostId.fulfilled, (state, action) => {
+      state.selectedPost = action.payload.data;
     });
   }
  
