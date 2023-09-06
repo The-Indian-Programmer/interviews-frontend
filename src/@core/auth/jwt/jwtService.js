@@ -17,6 +17,9 @@ export default class JwtService {
     // ** Request Interceptor
     axios.interceptors.request.use(
       config => {
+
+        axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
+
         // ** Get token from localStorage
         const accessToken = this.getToken()
 

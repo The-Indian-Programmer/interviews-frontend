@@ -1,8 +1,9 @@
 // ** Redux Imports
 
 import axios from "axios";
+import {API_URL} from "../configs/Contants";
 
-axios.defaults.baseURL = "http://localhost:3500";
+axios.defaults.baseURL = API_URL;
 
 
 export const uploadFiles = async (formData) => {

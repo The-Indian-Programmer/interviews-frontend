@@ -3,7 +3,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 
-axios.defaults.baseURL = "http://localhost:3500";
+import {API_URL} from "../../../../configs/Contants";
+
+axios.defaults.baseURL = API_URL;
 
 
 export const getUserDetails = createAsyncThunk("user/get-details", async (formData) => {

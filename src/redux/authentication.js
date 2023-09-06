@@ -8,7 +8,9 @@ import useJwt from '../auth/jwt/useJwt'
 const config = useJwt.jwtConfig
 
 
-axios.defaults.baseURL = "http://localhost:3500";
+import {API_URL} from "../configs/Contants";
+
+axios.defaults.baseURL = API_URL;
 
 const initialUser = () => {
   const item = window.localStorage.getItem("userData");
