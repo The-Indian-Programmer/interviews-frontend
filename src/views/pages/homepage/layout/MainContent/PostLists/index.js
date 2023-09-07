@@ -18,6 +18,8 @@ const PostsLists = () => {
   const perPageItem = useSelector((state) => state.posts.perPageItem);
   const dispatch = useDispatch();
 
+
+
   /* State Vars */
   const [selectedPost, setSelectedPost] = React.useState(null);
   const [showEditPostModal, setEditPostModal] = React.useState(false);
@@ -85,6 +87,9 @@ const PostsLists = () => {
 
     if (like) {
       oldPostLists[postIndex].likes = oldPostLists[postIndex].likes.filter((item) => item._id !== userData._id);
+
+      // socket.emit('like', { postId, userId: userData._id })
+
     } else {
       oldPostLists[postIndex].likes.push({_id: userData._id});
     }

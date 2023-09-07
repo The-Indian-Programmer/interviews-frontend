@@ -13,6 +13,7 @@ const UserDetail = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.selectedUser);
   const userData = useSelector((state) => state.auth.userData);
+  const onlineUsers = useSelector((state) => state.socket.onlineUsers);
 
   /* State vars */
   const [showEditProfileModal, setShowEditProfileModal] = React.useState(false);
@@ -118,6 +119,20 @@ const UserDetail = () => {
     }
   }
 
+
+  const isUserOnline = () => {
+    let isOnline = false;
+    if (userDetails.isMyAccount) return isOnline;
+
+    let arr = onlineUsers.filter(item => ((item.userId == userId) && !isEmpty(item.socketId)));
+
+    if (!isEmpty(arr) && arr.length > 0) {
+      isOnline = true
+    }
+
+    return isOnline
+  }
+
   return (
     <React.Fragment>
 
@@ -147,7 +162,9 @@ const UserDetail = () => {
               <h1 className="text-2xl font-semibold">
                 {userDetails.name ? userDetails.name : ''} ({userDetails.email})
               </h1>
-              <p className="text-gray-600">@{userDetails.username}</p>
+              <p className="text-gray-600">@{userDetails.username}
+              {isUserOnline() && <span className="text-green-500 font-extrabold ml-5">Active</span>}
+              </p>
               <p className="mt-2 text-gray-700">{userDetails.bio}</p>
 
               {/* <!-- Follow Button --> */}
@@ -159,7 +176,7 @@ const UserDetail = () => {
                 userDetails.isFollowing ?  <button onClick={handleFollow} className="mt-4 px-4 py-2 bg-white text-blue-500 font-semibold rounded-full border-2 border-blue-500 focus:outline-none focus:ring focus:ring-blue-300">
                   Following
                 </button> : <button onClick={handleFollow} className="mt-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
-                  Follow
+                  Follow 
                 </button>
               )}
 

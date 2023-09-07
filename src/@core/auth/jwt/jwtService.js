@@ -1,6 +1,6 @@
 import axios from 'axios'
 import jwtDefaultConfig from './jwtDefaultConfig'
-
+import {API_URL} from '../../../configs/Contants'
 export default class JwtService {
   // ** jwtConfig <= Will be used by this service
   jwtConfig = { ...jwtDefaultConfig }
@@ -17,6 +17,8 @@ export default class JwtService {
     // ** Request Interceptor
     axios.interceptors.request.use(
       config => {
+
+        axios.defaults.baseURL = API_URL
 
         axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 
