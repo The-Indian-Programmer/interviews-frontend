@@ -23,7 +23,7 @@ const Register = () => {
       password: "",
     },
     validationSchema: Yup.object({
-      username: Yup.string().min(5, 'Must be at least 5 characters').max(20, 'Must be less than 20 characters').required(VALIDATION_MESSAGES.required),
+      username: Yup.string().min(5, 'Must be at least 5 characters').max(20, 'Must be less than 20 characters').matches(/^\S*$/, 'Username cannot contain spaces').required(VALIDATION_MESSAGES.required),
       password: Yup.string().required(VALIDATION_MESSAGES.required),
     }),
     onSubmit: (values) => {

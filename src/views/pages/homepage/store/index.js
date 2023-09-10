@@ -33,6 +33,11 @@ export const handleGetAllTasks = createAsyncThunk("task/get-all-tasks", async (f
     return {data: response.data, page: formData.page, perPageItem: formData.perPageItem, searchTerm: formData.searchTerm, filter: formData.filter, order: formData.order, orderBy: formData.orderBy};
 });
 
+export const getTasksInfo = createAsyncThunk("task/get-tasks-info", async (formData) => {
+    const response = await axios.post("/task/get-tasks-info", formData);
+    return response.data;
+});
+
 
 
 
@@ -42,6 +47,11 @@ export const taskSlice = createSlice({
   name: "tasks",
   initialState: {
     allTasks: {data: [], hasMore: false},
+    taskCount: {
+        total: 0,
+        completed: 0,
+        pending: 0,
+    },
     currentPage: 1,
     perPageItem: 5,
     searchTerm: "",
@@ -64,6 +74,9 @@ export const taskSlice = createSlice({
             state.filter = action.payload.filter;
             state.order = action.payload.order;
             state.orderBy = action.payload.orderBy;
+        });
+        builder.addCase(getTasksInfo.fulfilled, (state, action) => {
+            state.taskCount = action.payload.data;
         });
   }
  

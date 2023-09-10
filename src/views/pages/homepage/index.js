@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { handleCreateTask, handleDeleteTask, handleGetAllTasks, handleUpdateTask, handleUpdateTaskStatus } from "./store/index";
+import { getTasksInfo, handleCreateTask, handleDeleteTask, handleGetAllTasks, handleUpdateTask, handleUpdateTaskStatus } from "./store/index";
 import DataTable, { createTheme } from 'react-data-table-component';
 import '../../../styles/react-data-table.css';
 import moment from "moment";
@@ -9,6 +9,7 @@ import ToastContent from "../../../common-components/Toast";
 import { Slide, toast } from "react-toastify";
 import { isEmpty } from "../../../configs/Funtions";
 import ConfirmationModal from "../../../common-components/ConfirmationModal";
+import DashboardLayout from "./dashboardlayout";
 const HomePage = () => {
   // Redux vars
   const userData = useSelector((state) => state.auth.userData);
@@ -32,6 +33,13 @@ const HomePage = () => {
   const [deleteTaskInfo, setDeleteTaskInfo] = React.useState(null);
   const [markAsCompleteTaskInfo, setMarkAsCompleteTaskInfo] = React.useState(null);
 
+
+  /* Funciton to get tasks count info */
+  const getTasksCount = async () => {
+    dispatch(getTasksInfo())
+
+  }
+
   /* Function to get all task lists */
   const getAllTasks = async () => {
     const bodyData = {
@@ -51,6 +59,7 @@ const HomePage = () => {
 
   /* Function to get data on mount */
   React.useEffect(() => {
+    getTasksCount();
     getAllTasks();
   }, []);
 
@@ -205,6 +214,8 @@ const HomePage = () => {
       setShowAddTasks(false);
       setEditTaskInfo(null);
       getAllTasks();
+    getTasksCount();
+
     }
   }
 
@@ -226,6 +237,8 @@ const HomePage = () => {
       );
       setDeleteTaskInfo(null);
       getAllTasks();
+    getTasksCount();
+
     }
   }
   /* Function to handle mark as complete */
@@ -247,6 +260,8 @@ const HomePage = () => {
       );
       setMarkAsCompleteTaskInfo(null);
       getAllTasks();
+    getTasksCount();
+
     }
   }
 
@@ -355,6 +370,8 @@ const HomePage = () => {
     <React.Fragment>
       <div className="homepage mt-28 w-full w-100 h-full container mx-auto">
         <div className="px-0 h-full">
+
+
           <div className="flex items-center w-100 justify-between mt-5">
             <h5 className="text-xl font-bold ">Task List</h5>
             <button onClick={() => setShowAddTasks(true)} className="border-4 border-gray-600 px-3 py-2 rounded-xl">
@@ -363,9 +380,13 @@ const HomePage = () => {
             </button>
           </div>
 
+          <DashboardLayout />
+
+
+
           {/* Filter */}
-          <div className="container mt-10 flex items-center justify-around">
-            <div class="relative flex items-center justify-start">
+          <div className="container mt-10 grid grid-cols-12 gap-3 ">
+            <div class="relative flex items-center justify-start col-span-12 sm:col-span-6 xs:col-span-12 md:col-span-5">
               <label className="mr-3 font-semibold">Priority : </label>
               <select class="block appearance-none bg-white border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200" value={filter.priority} onChange={handlePriorityChange}>
                 <option value=''>All</option>
@@ -374,7 +395,7 @@ const HomePage = () => {
                 <option value="high">High</option>
               </select>
             </div>
-            <div class="relative flex items-center justify-start">
+            <div class="relative flex items-center justify-start col-span-12 sm:col-span-6 xs:col-span-12 md:col-span-5">
               <label className="mr-3 font-semibold">Status : </label>
               <select class="block appearance-none bg-white border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200" value={filter.status} onChange={handleStatusChange}>
                 <option value=''>All</option>
@@ -383,8 +404,10 @@ const HomePage = () => {
               </select>
             </div>
           </div>
+
+
           <DataTable
-            className="table table-responsive data-table-wrapper filter-tablecss border-2 border-gray-400 mt-5 rounded-lg min-h-full"
+            className="table-responsive data-table-wrapper filter-tablecss border-2 border-gray-400 mt-5 rounded-lg min-h-full"
             columns={columns}
             data={allTasks.data}
             persistTableHead={true}
