@@ -14,7 +14,6 @@ import { useHistory } from "react-router-dom";
 const Login = () => {
   /* State Vars */
   const [isLoading, setLoading] = React.useState(false);
-  const [alertMessage, setAlertMessage] = React.useState("");
 
 
   /* Redux Vars */
@@ -26,13 +25,11 @@ const Login = () => {
   /* Formik Vars */
   const formik = useFormik({
     initialValues: {
-      email: "sumitkosta07@gmail.com",
+      username: "",
       password: "123456",
     },
     validationSchema: Yup.object({
-      email: Yup.string()
-        .email(VALIDATION_MESSAGES.email)
-        .required(VALIDATION_MESSAGES.required),
+      username: Yup.string().required(VALIDATION_MESSAGES.required),
       password: Yup.string().required(VALIDATION_MESSAGES.required),
     }),
     onSubmit: (values) => {
@@ -45,7 +42,7 @@ const Login = () => {
   const handleUserLogin = async (data) => {
     // setLoading(true);
     if (Object.values(data).every(field => field.length > 0)) {
-      const apiRes = await useJwt.login({ email: data.email, password: data.password });
+      const apiRes = await useJwt.login({ username: data.username, password: data.password });
       if (apiRes.data.status) {
         const data = {...apiRes.data.data, accessToken: apiRes.data.token, refreshToken: apiRes.data.token}
         dispatch(handleLogin(data))
@@ -65,27 +62,27 @@ const Login = () => {
         <div className="w-full xl:w-1/2 lg:w-1/2 md:w-1/2 h-5/6 p-6 bg-white rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-4 text-center">Login</h2>
           <form onSubmit={formik.handleSubmit}>
-            <div className="mb-4">
+          <div className="mb-4">
               <label
-                htmlFor="email"
+                htmlFor="username"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email
+                User Name
               </label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                className={`mt-1 px-4 py-2 w-full  rounded-lg  border-2 ${
-                  formik.errors.password && formik.touched.password
+                type="text"
+                id="username"
+                name="username"
+                autoComplete="off"
+                className={`mt-1 px-4 py-2 w-full  rounded-lg  border-2 ${formik.errors.username && formik.touched.username
                     ? "border-red-800"
                     : "border-gray-800"
-                }`}
-                value={formik.values.email}
+                  }`}
+                value={formik.values.username}
                 onChange={formik.handleChange}
               />
-              {formik.errors.email && formik.touched.email && (
-                <span className="text-red-800">{formik.errors.email}</span>
+              {formik.errors.username && formik.touched.username && (
+                <span className="text-red-800">{formik.errors.username}</span>
               )}
             </div>
             <div className="mb-4">

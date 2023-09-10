@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ConfirmationModal = ({ isOpen, title, onSubmit, onCancel }) => {
+const ConfirmationModal = ({ isOpen, title, onSubmit, onCancel, buttonText }) => {
     return (
         <div
             className={`${isOpen ? 'fixed' : 'hidden'
@@ -29,15 +29,15 @@ const ConfirmationModal = ({ isOpen, title, onSubmit, onCancel }) => {
                     aria-labelledby="modal-headline"
                 >
                     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div className="sm:flex sm:items-start">
+                        <div className="sm:flex sm:items-start ">
                             <div
-                                className={`mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full ${isOpen ? 'bg-red-100' : 'bg-red-100'
+                                className={`mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full  border-2 border-blue-500 ${isOpen ? 'bg-red-100' : 'bg-red-100'
                                     } sm:mx-0 sm:h-10 sm:w-10`}
                             >
                                 {/* Replace this icon with your confirmation icon */}
                                 {isOpen ? (
                                     <svg
-                                        className="h-6 w-6 text-red-600"
+                                        className="h-6 w-6 text-blue-600 border-blue-500"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -52,7 +52,7 @@ const ConfirmationModal = ({ isOpen, title, onSubmit, onCancel }) => {
                                     </svg>
                                 ) : (
                                     <svg
-                                        className="h-6 w-6 text-red-600"
+                                        className="h-6 w-6 text-blue-600  border-blue-500"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -69,7 +69,7 @@ const ConfirmationModal = ({ isOpen, title, onSubmit, onCancel }) => {
                             </div>
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                 <h3
-                                    className={`text-lg leading-6 font-medium ${isOpen ? 'text-red-600' : 'text-red-600'
+                                    className={`text-lg leading-6 font-medium ${isOpen ? 'text-blue-600' : 'text-blue-600'
                                         }`}
                                     id="modal-headline"
                                 >
@@ -87,9 +87,9 @@ const ConfirmationModal = ({ isOpen, title, onSubmit, onCancel }) => {
                         <button
                             onClick={onSubmit}
                             type="button"
-                            className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 hover:bg-red-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm`}
+                            className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm`}
                         >
-                            {isOpen ? 'Disconnect' : 'OK'}
+                            {buttonText}
                         </button>
                         <button
                             onClick={onCancel}

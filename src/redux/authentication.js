@@ -18,8 +18,8 @@ const initialUser = () => {
 };
 
 
-export const getUserData = createAsyncThunk("authentication/get-detail", async () => {
-  const response = await axios.get("/auth/get-detail");
+export const getUserData = createAsyncThunk("authentication/get-user", async () => {
+  const response = await axios.get("/auth/get-user");
   return response.data;
 });
 
@@ -39,6 +39,7 @@ export const authSlice = createSlice({
       localStorage.setItem('userData', JSON.stringify(action.payload))
       localStorage.setItem(config.storageTokenKeyName, JSON.stringify(action.payload.accessToken))
       localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
+      
     },
     handleRefresh: (state, action) => {
       state.userData = action.payload

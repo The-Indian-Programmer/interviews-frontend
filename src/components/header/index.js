@@ -83,7 +83,7 @@ const Header = () => {
       denyButtonColor: '#000000',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const apiRes = await useJwtVars.logout();
+        // const apiRes = await useJwtVars.logout();
         dispatch(handleLogout());
         history.push("/login");
         setIsOpen(false);
@@ -92,63 +92,33 @@ const Header = () => {
       }
     })
   }
-  const handleProfile = () => {
-    history.push(`/user/${userData._id}`);
-  }
 
-  /* Function to handle notification list */
-  const handleNotificationList = (status) => {
-    history.push("/notifications");
-  }
 
   /* Show icon based on user login status */
   const RenderUserIcon = () => {
-    if (isUserLoggedIn()) {
-      return (
-        <div className="flex items-center ">
-          <div className="relative mr-5">
-            <i onClick={() => handleNotificationList(true)} className="fa-solid fa-bell me-2 text-3xl " role="button"></i>
-            <span className="absolute top-1 right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">{otherData.notifications ? otherData.notifications : 0}</span>
-          </div>
-          <div className="relative inline-block text-left" >
-            {/* // Notification icon */}
-            <img
-              ref={dropdownRef}
-              src={defaultAvatar}
-              alt="Avatar"
-              onClick={toggleDropdown}
-              role="button"
-              className="w-12 h-12 object-cover border rounded-full border-gray-300 shadow-sm"
-            />
-            {isOpen && (
-              <div className="absolute right-0 mt-2 w-32 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg z-10">
-                <ul>
-                  <li className="cursor-pointer py-2 px-4 hover:bg-gray-100 text-center font-bold" onClick={handleProfile}>Profile</li>
-                  <li onClick={handleUserLogout} className="cursor-pointer py-2 px-4 hover:bg-gray-100 text-center font-bold">Logout</li>
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    } else {
-      return (<button
-        role="button"
-        onClick={() => handleLogin()}
-        className="flex items-center bg-gradient-to-r from-white to-gray-200 text-black font-semibold py-2 px-6 rounded-md shadow-md"
-      >
-        <i className="fa-solid fa-right-to-bracket me-2"></i> Login
-      </button>);
+
+    const handleButtonClick = () => {
+      if (isUserLoggedIn()) {
+        handleUserLogout();
+      } else {
+        handleLogin();
+      }
     }
+    return <button
+    role="button"
+    onClick={() => handleButtonClick()}
+    className="flex items-center bg-white border-2 border-black text-black font-semibold py-2 px-6 rounded-md shadow-md"
+  >
+    {!isUserLoggedIn() && <i className="fas fa-user mr-2"></i>}
+     {isUserLoggedIn() ? 'Logout' : 'Login'}
+     {isUserLoggedIn() && <i className="fas fa-sign-out-alt ml-2"></i>}
+  </button>
   };
 
   return (
     <>
       <nav
-        className={`${scrolling
-            ? "bg-gray-500 text-white"
-            : "text-white bg-gradient-to-r from-gray-500 to-gray-600"
-          } py-4 px-6 flex items-center justify-between shadow-lg fixed top-0 left-0 right-0 z-50`}
+        className={`bg-white text-black py-4 px-6 flex items-center justify-between shadow-lg fixed top-0 left-0 right-0 z-50`}
       >
         <Link to="/" className="flex items-center" role="button">
           <svg className="h-6 w-6 text-white bg-gray-500 rounded-full p-1 ">
@@ -159,7 +129,7 @@ const Header = () => {
           </svg>
 
           <span className="ml-3 md:block lg:block hidden font-extrabold text-xl bg-none hover:bg-none">
-            Social Media
+            Todo App
           </span>
         </Link>
         <RenderUserIcon />

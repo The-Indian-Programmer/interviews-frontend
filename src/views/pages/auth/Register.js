@@ -19,15 +19,11 @@ const Register = () => {
   /* Formik Vars */
   const formik = useFormik({
     initialValues: {
-      email: "",
       username: "",
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string()
-        .email(VALIDATION_MESSAGES.email)
-        .required(VALIDATION_MESSAGES.required),
-      username: Yup.string().required(VALIDATION_MESSAGES.required),
+      username: Yup.string().min(5, 'Must be at least 5 characters').max(20, 'Must be less than 20 characters').required(VALIDATION_MESSAGES.required),
       password: Yup.string().required(VALIDATION_MESSAGES.required),
     }),
     onSubmit: (values) => {
@@ -54,29 +50,7 @@ const Register = () => {
         <div className="w-full xl:w-1/2 lg:w-1/2 md:w-1/2 h-5/6 p-6 bg-white rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-4 text-center">Create Account</h2>
           <form onSubmit={formik.handleSubmit}>
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className={`mt-1 px-4 py-2 w-full  rounded-lg  border-2 ${formik.errors.email && formik.touched.email
-                    ? "border-red-800"
-                    : "border-gray-800"
-                  }`}
-                value={formik.values.email}
-                autoComplete="off"
-                onChange={formik.handleChange}
-              />
-              {formik.errors.email && formik.touched.email && (
-                <span className="text-red-800">{formik.errors.email}</span>
-              )}
-            </div>
+            
             <div className="mb-4">
               <label
                 htmlFor="username"
