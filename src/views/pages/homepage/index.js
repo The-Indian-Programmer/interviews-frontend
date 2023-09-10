@@ -296,7 +296,7 @@ const HomePage = () => {
       left: true,
       sortField: "description",
       allowOverflow: false,
-      cell: (row) => <span title={row.description}>{row.description.length > 50 ? row.description.substring(0, 55) + '...' : row.title}</span>,
+      cell: (row) => <span title={row.description}>{row.description.length > 50 ? row.description.substring(0, 55) + '...' : row.description}</span>,
 
     },
     {
